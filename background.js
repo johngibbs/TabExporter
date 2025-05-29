@@ -59,10 +59,15 @@ async function exportCurrentWindowTabs() {
     const blob = new Blob([markdownContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     
-    // Download the file
+    // Download the file with date and time to avoid collisions
+    const now = new Date();
+    const date = now.toISOString().split('T')[0];
+    const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+    const filename = `tabs-export_${date}_${time}.md`;
+    
     chrome.downloads.download({
       url: url,
-      filename: `tabs-export-${new Date().toISOString().split('T')[0]}.md`,
+      filename: filename,
       saveAs: true
     });
   } catch (error) {

@@ -60,7 +60,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create blob and download
             const blob = new Blob([markdownContent], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
-            const filename = `tabs-export-${new Date().toISOString().split('T')[0]}.md`;
+            // Create filename with date and time to avoid collisions
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+            const filename = `tabs-export_${date}_${time}.md`;
             
             chrome.downloads.download({
                 url: url,
