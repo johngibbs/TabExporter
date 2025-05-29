@@ -62,8 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = URL.createObjectURL(blob);
             // Create filename with date and time to avoid collisions
             const now = new Date();
-            const date = now.toISOString().split('T')[0];
-            const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+            const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
+            
+            // Format time with AM/PM indicator
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'P' : 'A';
+            const hours12 = (hours % 12 || 12).toString().padStart(2, '0');
+            
+            const time = `${ampm}${hours12}${minutes}${seconds}`;
             const filename = `tabs-export_${date}_${time}.md`;
             
             chrome.downloads.download({
