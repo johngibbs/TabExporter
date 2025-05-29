@@ -46,11 +46,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 markdownContent += `- [${tab.title}](${tab.url})\n`;
             });
 
+            // Map API color names to browser UI color names
+            const colorMap = {
+                'blue': 'blue',
+                'pink': 'pink',
+                'red': 'violet',
+                'purple': 'purple',
+                'green': 'royal blue',
+                'cyan': 'teal',
+                'orange': 'orange',
+                'yellow': 'yellow',
+                'grey': 'gray',
+            };
+            
             // Add grouped tabs
             for (const group of allGroups) {
                 const groupTabs = tabs.filter(tab => tab.groupId === group.id);
                 if (groupTabs.length > 0) {
-                    markdownContent += `\n## Group: ${group.title || 'Unnamed Group'}\n\n`;
+                    const displayColor = colorMap[group.color] || group.color;
+                    markdownContent += `\n## Group [${displayColor}]: ${group.title || 'Unnamed Group'}\n\n`;
                     groupTabs.forEach(tab => {
                         markdownContent += `- [${tab.title}](${tab.url})\n`;
                     });

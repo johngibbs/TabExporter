@@ -34,11 +34,25 @@ async function exportCurrentWindowTabs() {
     // Create markdown content
     let markdownContent = '# Browser Tabs Export\n\n';
     
+    // Map API color names to browser UI color names
+    const colorMap = {
+      'blue': 'blue',
+      'pink': 'pink',
+      'red': 'violet',
+      'purple': 'purple',
+      'green': 'royal blue',
+      'cyan': 'teal',
+      'orange': 'orange',
+      'yellow': 'yellow',
+      'grey': 'gray',
+  };
+    
     // Process tab groups first
     for (const group of groups) {
       const groupTabs = tabs.filter(tab => tab.groupId === group.id);
       if (groupTabs.length > 0) {
-        markdownContent += `## Group: ${group.title}\n\n`;
+        const displayColor = colorMap[group.color] || group.color;
+        markdownContent += `## Group [${displayColor}]: ${group.title || 'Unnamed Group'}\n\n`;
         for (const tab of groupTabs) {
           markdownContent += `- [${tab.title}](${tab.url})\n`;
         }
