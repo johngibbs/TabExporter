@@ -3,6 +3,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const debugButton = document.getElementById('debugGroups');
     const statusDiv = document.getElementById('status');
     const debugOutput = document.getElementById('debugOutput');
+    const sortByPositionRadio = document.getElementById('sortByPosition');
+    const sortAlphabeticallyRadio = document.getElementById('sortAlphabetically');
+    
+    // Load saved sort preference
+    chrome.storage.sync.get(['sortByPosition'], function(result) {
+        if (result.sortByPosition === false) {
+            sortAlphabeticallyRadio.checked = true;
+            sortByPositionRadio.checked = false;
+        } else {
+            // Default to position sorting if no preference saved
+            sortByPositionRadio.checked = true;
+            sortAlphabeticallyRadio.checked = false;
+        }
+    });
+    
+    // Save sort preference when changed
+    sortByPositionRadio.addEventListener('change', function() {
+        chrome.storage.sync.set({sortByPosition: true});
+    });
+    
+    sortAlphabeticallyRadio.addEventListener('change', function() {
+        chrome.storage.sync.set({sortByPosition: false});
+    });
 
     exportButton.addEventListener('click', async function() {
         try {
@@ -32,8 +55,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 minTabIndex: g.minTabIndex 
             }))));
             
-            // Sort by the minimum tab index in each group
-            allGroups.sort((a, b) => a.minTabIndex - b.minTabIndex);
+            // Get the selected sort order
+            const sortByPosition = document.getElementById('sortByPosition').checked;
+            
+            // Sort groups based on the selected sort order
+            if (sortByPosition) {
+                // Sort by the minimum tab index in each group (browser order)
+                allGroups.sort((a, b) => a.minTabIndex - b.minTabIndex);
+            } else {
+                // Sort alphabetically by group title
+                allGroups.sort((a, b) => {
+                    const titleA = a.title || '';
+                    const titleB = b.title || '';
+                    return titleA.localeCompare(titleB);
+                });
+            }
             
             console.log('Sorted groups by position:', JSON.stringify(allGroups.map(g => ({ 
                 title: g.title, 
@@ -110,8 +146,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Add debug button functionality
-    debugButton.addEventListener('click', async function() {
+    // Function to toggle tab group info display
+    async function toggleTabGroupInfo() {
+        if (debugOutput.style.display === 'block') {
+            // If already displayed, hide it
+            debugOutput.style.display = 'none';
+            debugButton.textContent = 'Show Tab Group Info';
+        } else {
+            // Otherwise show it
+            await displayTabGroupInfo();
+            debugButton.textContent = 'Hide Tab Group Info';
+        }
+    }
+    
+    // Function to display tab group information based on sort order
+    async function displayTabGroupInfo() {
         try {
             // Get the current window
             const window = await chrome.windows.getCurrent({ populate: true });
@@ -131,12 +180,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Sort by the minimum tab index in each group
-            const sortedByPosition = [...allGroups].sort((a, b) => a.minTabIndex - b.minTabIndex);
+            // Get the selected sort order
+            const sortByPosition = document.getElementById('sortByPosition').checked;
             
-            // Display the results
-            let output = '=== Tab Groups (by position in tab bar) ===\n';
-            sortedByPosition.forEach(group => {
+            // Clone and sort the groups based on selected order
+            let sortedGroups;
+            let output;
+            
+            if (sortByPosition) {
+                // Sort by browser position
+                sortedGroups = [...allGroups].sort((a, b) => a.minTabIndex - b.minTabIndex);
+                output = `=== Tab Groups (by position in tab bar) ===\n`;
+            } else {
+                // Sort alphabetically
+                sortedGroups = [...allGroups].sort((a, b) => {
+                    const titleA = a.title || '';
+                    const titleB = b.title || '';
+                    return titleA.localeCompare(titleB);
+                });
+                output = `=== Tab Groups (alphabetical) ===\n`;
+            }
+            
+            // Add group details to output
+            sortedGroups.forEach(group => {
                 output += `Group: ${group.title || 'Unnamed'}\n`;
                 output += `  Min Tab Index: ${group.minTabIndex}\n`;
                 output += `  Color: ${group.color}\n`;
@@ -144,23 +210,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 output += '---\n';
             });
             
-            output += '\n=== Tab Groups (alphabetical) ===\n';
-            const sortedByTitle = [...allGroups].sort((a, b) => {
-                const titleA = a.title || '';
-                const titleB = b.title || '';
-                return titleA.localeCompare(titleB);
-            });
-            
-            sortedByTitle.forEach(group => {
-                output += `Group: ${group.title || 'Unnamed'} (Index: ${group.index})\n`;
-            });
-            
-            // Display the debug output
             debugOutput.textContent = output;
             debugOutput.style.display = 'block';
         } catch (error) {
             debugOutput.textContent = 'Error: ' + error.message;
             debugOutput.style.display = 'block';
+            debugButton.textContent = 'Hide Tab Group Info';
+        }
+    }
+    
+    // Add debug button functionality
+    debugButton.addEventListener('click', toggleTabGroupInfo);
+    
+    // Update tab group info when sort order changes
+    sortByPositionRadio.addEventListener('change', function() {
+        if (debugOutput.style.display === 'block') {
+            displayTabGroupInfo();
+            debugButton.textContent = 'Hide Tab Group Info';
+        }
+    });
+    
+    sortAlphabeticallyRadio.addEventListener('change', function() {
+        if (debugOutput.style.display === 'block') {
+            displayTabGroupInfo();
+            debugButton.textContent = 'Hide Tab Group Info';
         }
     });
 });

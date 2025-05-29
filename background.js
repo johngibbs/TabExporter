@@ -28,8 +28,28 @@ async function exportCurrentWindowTabs() {
       }
     }
     
-    // Sort by the minimum tab index in each group
-    groups.sort((a, b) => a.minTabIndex - b.minTabIndex);
+    // Get the saved sort preference and sort groups accordingly
+    await new Promise((resolve) => {
+      chrome.storage.sync.get(['sortByPosition'], function(result) {
+        const sortByPosition = result.sortByPosition !== false; // Default to position sorting
+        
+        // Sort groups based on the saved preference
+        if (sortByPosition) {
+          // Sort by the minimum tab index in each group (browser order)
+          groups.sort((a, b) => a.minTabIndex - b.minTabIndex);
+        } else {
+          // Sort alphabetically by group title
+          groups.sort((a, b) => {
+            const titleA = a.title || '';
+            const titleB = b.title || '';
+            return titleA.localeCompare(titleB);
+          });
+        }
+        
+        // Continue processing after sorting is complete
+        resolve();
+      });
+    });
     
     // Create markdown content
     let markdownContent = '# Browser Tabs Export\n\n';

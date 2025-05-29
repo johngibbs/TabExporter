@@ -32,12 +32,43 @@
         #status.error {
             color: red;
         }
+        
+        .option-group {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .option-group p {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .option-group label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h2>Tab Exporter</h2>
+    <div class="option-group">
+        <p>Tab Group Sorting:</p>
+        <label>
+            <input type="radio" name="sortOrder" id="sortByPosition" value="position" checked>
+            Browser Order
+        </label>
+        <label>
+            <input type="radio" name="sortOrder" id="sortAlphabetically" value="alphabetical">
+            Alphabetical
+        </label>
+    </div>
     <button id="exportTabs">Export Current Window Tabs</button>
-    <button id="debugGroups">Debug Tab Groups</button>
+    <button id="debugGroups">Show Tab Group Info</button>
     <div id="status"></div>
     <pre id="debugOutput" style="display: none; margin-top: 10px; padding: 10px; background-color: #f5f5f5; border: 1px solid #ddd; max-height: 200px; overflow: auto; font-size: 12px;"></pre>
     <script src="popup.js"></script>
