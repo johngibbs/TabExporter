@@ -11,17 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create markdown content
             let markdownContent = '# Browser Tabs Export\n\n';
             
-            // Group tabs by their group ID
-            const groups = new Map();
-            tabs.forEach(tab => {
-                if (tab.groupId !== -1) {
-                    if (!groups.has(tab.groupId)) {
-                        groups.set(tab.groupId, []);
-                    }
-                    groups.get(tab.groupId).push(tab);
-                }
-            });
-
+            // Get tab groups from the current window
+            const allGroups = await chrome.tabGroups.query({ windowId: window.id });
+            
             // Add ungrouped tabs first
             markdownContent += '## Ungrouped Tabs\n\n';
             tabs.filter(tab => tab.groupId === -1).forEach(tab => {
@@ -29,12 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Add grouped tabs
-            for (const [groupId, groupTabs] of groups) {
-                const group = await chrome.tabs.getGroup(groupId);
-                markdownContent += `\n## ${group.title}\n\n`;
-                groupTabs.forEach(tab => {
-                    markdownContent += `- [${tab.title}](${tab.url})\n`;
-                });
+            for (const group of allGroups) {
+                const groupTabs = tabs.filter(tab => tab.groupId === group.id);
+                if (groupTabs.length > 0) {
+                    markdownContent += `\n## Group: ${group.title || 'Unnamed Group'}\n\n`;
+                    groupTabs.forEach(tab => {
+                        markdownContent += `- [${tab.title}](${tab.url})\n`;
+                    });
+                }
             }
 
             // Create blob and download

@@ -6,15 +6,11 @@
   "permissions": [
     "tabs",
     "windows",
-    "downloads"
+    "downloads",
+    "tabGroups"
   ],
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
-    }
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js"
