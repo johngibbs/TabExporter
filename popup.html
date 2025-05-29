@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tab Exporter</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        #status {
+            margin-top: 10px;
+            padding: 5px;
+            display: none;
+        }
+        #status.success {
+            color: green;
+        }
+        #status.error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h2>Tab Exporter</h2>
+    <button id="exportTabs">Export Current Window Tabs</button>
+    <div id="status"></div>
+    <script src="popup.js"></script>
+</body>
+</html>
