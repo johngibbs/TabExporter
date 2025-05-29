@@ -15,7 +15,21 @@ async function exportCurrentWindowTabs() {
     const tabs = await chrome.tabs.query({ windowId: currentWindow.id });
     
     // Get tab groups
-    const groups = await chrome.tabGroups.query({ windowId: currentWindow.id });
+    let groups = await chrome.tabGroups.query({ windowId: currentWindow.id });
+    
+    // Find the minimum tab index for each group (this represents the group's position in tab bar)
+    for (const group of groups) {
+      const groupTabs = tabs.filter(tab => tab.groupId === group.id);
+      if (groupTabs.length > 0) {
+        // Find the minimum tab index in this group
+        group.minTabIndex = Math.min(...groupTabs.map(tab => tab.index));
+      } else {
+        group.minTabIndex = Infinity;
+      }
+    }
+    
+    // Sort by the minimum tab index in each group
+    groups.sort((a, b) => a.minTabIndex - b.minTabIndex);
     
     // Create markdown content
     let markdownContent = '# Browser Tabs Export\n\n';
