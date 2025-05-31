@@ -7,6 +7,25 @@
             width: 300px;
             padding: 10px;
             font-family: Arial, sans-serif;
+            position: relative;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .icon-container {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .icon-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         button {
             width: 100%;
@@ -55,7 +74,12 @@
     </style>
 </head>
 <body>
-    <h2>Tab Exporter</h2>
+    <div class="header">
+        <h2>Tab Exporter</h2>
+        <div class="icon-container">
+            <img src="icons/icon.svg" alt="Tab Exporter Icon">
+        </div>
+    </div>
     <div class="option-group">
         <p>Tab Group Sorting:</p>
         <label>

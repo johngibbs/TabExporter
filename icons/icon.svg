@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Three “tab” rectangles at the top -->
+  <rect x="10" y="10" width="28" height="20" rx="4"
+        fill="none" stroke="#000" stroke-width="8"/>
+  <rect x="50" y="10" width="28" height="20" rx="4"
+        fill="none" stroke="#000" stroke-width="8"/>
+  <rect x="90" y="10" width="28" height="20" rx="4"
+        fill="none" stroke="#000" stroke-width="8"/>
+
+  <!-- Arrow shaft (middle) -->
+  <line x1="64" y1="35" x2="64" y2="60"
+        stroke="#000" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Arrowhead pointing down into the box below -->
+  <polyline points="54,60 64,80 74,60"
+            fill="none" stroke="#000" stroke-width="8"
+            stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- “Save box” at the bottom -->
+  <rect x="44" y="80" width="40" height="24" rx="4"
+        fill="none" stroke="#000" stroke-width="8"/>
+</svg>
