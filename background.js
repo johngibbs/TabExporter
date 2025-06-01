@@ -89,14 +89,13 @@ async function exportCurrentWindowTabs() {
       }
     }
     
-    // Create download link
+    // Create content blob and download link
     const blob = new Blob([markdownContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     
-    // Download the file with date and time to avoid collisions
+    // Create filename with date and time to avoid collisions
     const now = new Date();
     const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
-    
     // Format time with AM/PM indicator
     const hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');

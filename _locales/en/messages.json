@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Tab Exporter",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Export your browser tabs and groups to a markdown file",
+    "description": "The description of the application"
+  }
+}

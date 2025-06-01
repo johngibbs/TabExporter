@@ -107,9 +107,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // Create blob and download
+            // Create content blob and download link
             const blob = new Blob([markdownContent], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
+            
             // Create filename with date and time to avoid collisions
             const now = new Date();
             const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
