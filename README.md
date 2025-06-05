@@ -1,14 +1,12 @@
 # Tab Exporter Extension
 
-A Microsoft Edge extension that allows you to export your browser tabs (including tab groups) to a well-formatted markdown file. Perfect for saving research, project references, or simply keeping track of your browsing sessions.
+A Microsoft Edge extension that allows you to export your current browser window's tabs (including tab groups) to a well-formatted markdown file. Perfect for saving research, project references, or simply keeping track of your browsing sessions.
 
 ## Features
 
-- Export tabs to markdown with groups preserved
-- Display tab group colors and sort by position or name
-- Generate timestamped filenames for unique exports
-- Toggle view for tab group information
-- Clean, intuitive interface
+- Export current browser window's tabs and groups to a markdown file
+- Sort tab groups by browser position or alphabetically
+- Generate timestamped filenames to avoid name conflicts
 - Privacy-focused: All processing happens locally in your browser
 
 ## Installation

@@ -4,9 +4,15 @@
 
 ### Store Assets to Prepare
 - [ ] Create promotional images (1280x800) showing the extension in action
-- [ ] Prepare a detailed description for the store listing
-- [ ] Create a feature list highlighting key functionality
-- [ ] Host the privacy policy at a permanent URL (needed before publishing)
+- [x] Prepare a detailed description for the store listing
+    - A Microsoft Edge extension that allows you to export your current browser window's tabs (including tab groups) to a well-formatted markdown file. Perfect for saving research, project references, or simply keeping track of your browsing sessions.
+- [x] Create a feature list highlighting key functionality
+    - Export current browser window's tabs and groups to a markdown file
+    - Sort tab groups by browser position or alphabetically
+    - Generate timestamped filenames to avoid name conflicts
+    - Privacy-focused: All processing happens locally in your browser
+- [x] Host the privacy policy at a permanent URL (needed before publishing)
+    - https://github.com/johngibbs/TabExporter/blob/main/PRIVACY.md
 
 ### Update Placeholder Values
 - [ ] Update Microsoft Edge Store URL in `README.md` after publishing (search for 'PLACEHOLDER-EXTENSION-ID')
