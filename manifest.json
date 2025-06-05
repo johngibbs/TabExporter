@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Export your browser tabs and groups to a markdown file.",
   "author": "John Gibbs",
-  "homepage_url": "https://github.com/johngibbs/tab-exporter",
+  "homepage_url": "https://github.com/johngibbs/TabExporter",
   "short_name": "TabExporter",
   "default_locale": "en",
   "icons": {

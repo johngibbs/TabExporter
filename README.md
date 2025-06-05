@@ -52,7 +52,7 @@ Tab Exporter is designed with your privacy in mind:
 - **No Server Communication**: Your tab data never leaves your computer
 - **Minimal Permissions**: Only requests necessary permissions to function
 
-For more details, please see our [Privacy Policy](./docs/PRIVACY.md).
+For more details, please see our [Privacy Policy](./PRIVACY.md).
 
 ## Development
 
@@ -60,7 +60,7 @@ For more details, please see our [Privacy Policy](./docs/PRIVACY.md).
 
 1. Fork and clone this repository
    ```bash
-   git clone https://github.com/yourusername/tab-exporter.git
+   git clone https://github.com/johngibbs/TabExporter.git
    cd tab-exporter
    ```
 2. Open Microsoft Edge and navigate to `edge://extensions/`

@@ -42,7 +42,7 @@ We may update our Privacy Policy from time to time. We will notify you of any ch
 ## 6. Contact Us
 
 If you have any questions about this Privacy Policy, please contact us at:
-- GitHub: [GitHub Issues Page](https://github.com/johngibbs/tab-exporter/issues)
+- GitHub: [GitHub Issues Page](https://github.com/johngibbs/TabExporter/issues)
 
 ---
 *This Privacy Policy is effective as of May 31, 2025.*

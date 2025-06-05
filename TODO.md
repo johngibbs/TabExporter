@@ -2,22 +2,18 @@
 
 ## Before Publishing to Microsoft Edge Add-ons Store
 
-### Documentation Updates
-- [x] Update GitHub issues URL in `docs/PRIVACY.md`
-- [ ] Update version number in `manifest.json` if needed before release
-- [ ] Update Microsoft Edge Store URL in `README.md` after publishing
-
-### Privacy Policy
-- [ ] Host the privacy policy at a permanent URL (needed before publishing)
-- [ ] Update any placeholders in the privacy policy (needed before publishing)
-- [ ] Add link to privacy policy in the extension's popup (optional)
-
-### Assets to Prepare
+### Store Assets to Prepare
 - [ ] Create promotional images (1280x800) showing the extension in action
 - [ ] Prepare a detailed description for the store listing
 - [ ] Create a feature list highlighting key functionality
+- [ ] Host the privacy policy at a permanent URL (needed before publishing)
 
-### Version Control
+### Update Placeholder Values
+- [ ] Update Microsoft Edge Store URL in `README.md` after publishing (search for 'PLACEHOLDER-EXTENSION-ID')
+- [x] Update GitHub URL in any files that reference it: https://github.com/johngibbs/TabExporter  
+
+### Versioning
+- [ ] Update version number in `manifest.json` if needed before release
 - [ ] Create and push v1.0.0 git tag before publishing
   ```bash
   git tag -a v1.0.0 -m "Initial public release"
@@ -25,7 +21,7 @@
   ```
 
 ## Future Enhancements
-- [ ] Update export filename to "Tabs-Export_MsEdge-(<window/workspace-name>)_YYYY-MM-DD_[A|P]HHMMSS.md"
+- [ ] Update export filename to "tabs_msedge-<window/workspace-name>_YYYY-MM-DD_[A|P]HHMMSS.md"
 - [ ] Update export file title to "# Tabs Export - Microsoft Edge ([Window|Workspace]: <window/workspace-name>)"
 - [ ] Add support for exporting to different formats (HTML, JSON)
 - [ ] Add options for customizing the markdown output
