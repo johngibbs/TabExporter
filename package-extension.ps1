@@ -42,7 +42,6 @@ New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 $filesToCopy = @(
     "_locales",
     "icons",
-    "background.js",
     "CHANGELOG.md",
     "LICENSE",
     "manifest.json",
