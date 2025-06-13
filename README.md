@@ -13,7 +13,7 @@ A Microsoft Edge extension that allows you to export your current browser window
 
 ### Option 1: Install from Microsoft Edge Add-ons Store (Recommended)
 
-1. Visit the [Tab Exporter](https://microsoftedge.microsoft.com/addons/detail/PLACEHOLDER-EXTENSION-ID) page in the Microsoft Edge Add-ons Store
+1. Visit the [Tab Exporter](https://microsoftedge.microsoft.com/addons/detail/nnmgfhilifplgjoefmahapjabedaggep) page in the Microsoft Edge Add-ons Store
 2. Click "Get" or "Add to Edge"
 3. Confirm the installation when prompted
 

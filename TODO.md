@@ -15,7 +15,7 @@
     - https://github.com/johngibbs/TabExporter/blob/main/PRIVACY.md
 
 ### Update Placeholder Values
-- [ ] Update Microsoft Edge Store URL in `README.md` after publishing (search for 'PLACEHOLDER-EXTENSION-ID')
+- [x] Update Microsoft Edge Store URL in `README.md` after publishing (search for 'PLACEHOLDER-EXTENSION-ID')
 - [x] Update GitHub URL in any files that reference it: https://github.com/johngibbs/TabExporter  
 
 ### Versioning
