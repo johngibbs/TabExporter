@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Export browser tabs and tab groups to markdown
 - Sort tab groups by browser order or alphabetically
 - Toggle tab group information display
-- Dark/light theme support for the popup
 - Comprehensive documentation and privacy policy
 
 [1.0.0]: https://github.com/johngibbs/TabExporter/releases/tag/v1.0.0

@@ -26,13 +26,14 @@ async function exportTabs() {
         // Process groups and calculate their minimum tab indices
         for (const group of allGroups) {
             const groupTabs = tabs.filter(tab => tab.groupId === group.id);
-            group.minTabIndex = groupTabs.length > 0 
+            group.minTabIndex = groupTabs.length > 0
                 ? Math.min(...groupTabs.map(tab => tab.index))
                 : Infinity;
         }
         
-        // Get sort preference
+        // Get sort preferences
         const sortByPosition = document.getElementById('sortByPosition').checked;
+        const groupUngroupedTabs = document.getElementById('ungroupedSingle').checked;
         
         // Sort groups based on preference
         const sortedGroups = [...allGroups].sort(sortByPosition
@@ -43,24 +44,123 @@ async function exportTabs() {
         // Generate markdown content
         let markdownContent = '# Browser Tabs Export\n\n';
         
-        // Add ungrouped tabs
-        const ungroupedTabs = tabs.filter(tab => tab.groupId === -1);
-        if (ungroupedTabs.length > 0) {
-            markdownContent += '## Ungrouped Tabs\n\n';
-            ungroupedTabs.forEach(tab => {
-                markdownContent += `- [${tab.title}](${tab.url})\n`;
+        // Get all tabs in their current order
+        const allTabs = [...tabs].sort((a, b) => a.index - b.index);
+        
+        // Process all tabs in order, separating into groups and ungrouped sections
+        const allSections = [];
+        let currentUngrouped = [];
+        
+        // First, process all tabs to create an ordered list of sections
+        for (const tab of allTabs) {
+            if (tab.groupId === -1) {
+                currentUngrouped.push(tab);
+            } else {
+                // If we were collecting ungrouped tabs, add them as a section
+                if (currentUngrouped.length > 0) {
+                    allSections.push({
+                        type: 'ungrouped',
+                        tabs: [...currentUngrouped]
+                    });
+                    currentUngrouped = [];
+                }
+                
+                // Add the grouped tab to its group
+                const group = allGroups.find(g => g.id === tab.groupId);
+                if (group) {
+                    // Check if we already created a section for this group
+                    const existingGroupSection = allSections.find(s => 
+                        s.type === 'group' && s.group.id === group.id
+                    );
+                    
+                    if (!existingGroupSection) {
+                        allSections.push({
+                            type: 'group',
+                            group: group,
+                            tabs: [tab],
+                            minIndex: tab.index
+                        });
+                    } else {
+                        existingGroupSection.tabs.push(tab);
+                        existingGroupSection.minIndex = Math.min(existingGroupSection.minIndex, tab.index);
+                    }
+                }
+            }
+        }
+        
+        // Add any remaining ungrouped tabs
+        if (currentUngrouped.length > 0) {
+            allSections.push({
+                type: 'ungrouped',
+                tabs: currentUngrouped
             });
         }
         
-        // Add grouped tabs
-        for (const group of sortedGroups) {
-            const groupTabs = tabs.filter(tab => tab.groupId === group.id);
-            if (groupTabs.length > 0) {
+        // Sort sections based on the selected order
+        const sortedSections = [...allSections];
+        if (!sortByPosition) {
+            // For alphabetical order, we'll handle groups and ungrouped sections separately
+            const groupedSections = sortedSections.filter(s => s.type === 'group');
+            const ungroupedSections = sortedSections.filter(s => s.type === 'ungrouped');
+            
+            // Sort groups alphabetically
+            groupedSections.sort((a, b) => 
+                (a.group.title || '').localeCompare(b.group.title || '')
+            );
+            
+            // Sort ungrouped sections by their first tab's title
+            ungroupedSections.sort((a, b) => 
+                (a.tabs[0]?.title || '').localeCompare(b.tabs[0]?.title || '')
+            );
+            
+            // Replace with the new sorted array
+            sortedSections.length = 0;
+            sortedSections.push(...groupedSections, ...ungroupedSections);
+        } else {
+            // For browser order, sort by the minimum tab index in each section
+            sortedSections.sort((a, b) => {
+                const aMinIndex = a.type === 'group' 
+                    ? a.minIndex 
+                    : Math.min(...a.tabs.map(t => t.index));
+                const bMinIndex = b.type === 'group'
+                    ? b.minIndex
+                    : Math.min(...b.tabs.map(t => t.index));
+                return aMinIndex - bMinIndex;
+            });
+        }
+        
+        // Generate markdown content for each section
+        let ungroupedCounter = 1;
+        for (const section of sortedSections) {
+            if (section.type === 'ungrouped') {
+                if (section.tabs.length === 0) continue;
+                
+                if (groupUngroupedTabs) {
+                    // Add all ungrouped tabs to a single section
+                    markdownContent += '## Ungrouped Tabs\n\n';
+                    section.tabs.forEach(tab => {
+                        markdownContent += `- [${tab.title}](${tab.url})\n`;
+                    });
+                    markdownContent += '\n';
+                } else {
+                    // Add each ungrouped tab or group of adjacent tabs as separate sections
+                    markdownContent += `## Ungrouped #${ungroupedCounter++}\n\n`;
+                    section.tabs.forEach(tab => {
+                        markdownContent += `- [${tab.title}](${tab.url})\n`;
+                    });
+                    markdownContent += '\n';
+                }
+            } else {
+                // Add grouped tabs
+                const group = section.group;
+                if (section.tabs.length === 0) continue;
+                
                 const displayColor = colorMap[group.color] || group.color;
-                markdownContent += `\n## Group [${displayColor}]: ${group.title || 'Unnamed Group'}\n\n`;
-                groupTabs.forEach(tab => {
+                markdownContent += `## Group [${displayColor}]: ${group.title || 'Unnamed Group'}\n\n`;
+                section.tabs.forEach(tab => {
                     markdownContent += `- [${tab.title}](${tab.url})\n`;
                 });
+                markdownContent += '\n';
             }
         }
         
@@ -116,12 +216,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const sortByPositionRadio = document.getElementById('sortByPosition');
     const sortAlphabeticallyRadio = document.getElementById('sortAlphabetically');
     
-    // Load saved sort preference
-    chrome.storage.sync.get(['sortByPosition'], function(result) {
-        // If sort preference is not set, then default to sort-by-position
-        const sortByPosition = result.sortByPosition !== false;
-        sortByPositionRadio.checked = sortByPosition;
-        sortAlphabeticallyRadio.checked = !sortByPosition;
+    // Load saved preferences
+    chrome.storage.sync.get({
+        sortByPosition: true,
+        groupUngroupedTabs: true
+    }, function(result) {
+        // Set sort order
+        sortByPositionRadio.checked = result.sortByPosition !== false;
+        sortAlphabeticallyRadio.checked = !result.sortByPosition;
+        
+        // Set ungrouped tabs preference
+        const ungroupedSingle = document.getElementById('ungroupedSingle');
+        const ungroupedIndividual = document.getElementById('ungroupedIndividual');
+        ungroupedSingle.checked = result.groupUngroupedTabs !== false;
+        ungroupedIndividual.checked = result.groupUngroupedTabs === false;
     });
     
     // Save sort preference when changed
@@ -130,6 +238,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     sortAlphabeticallyRadio.addEventListener('change', () => {
         chrome.storage.sync.set({sortByPosition: false});
+    });
+    
+    // Save ungrouped tabs preference when changed
+    document.getElementById('ungroupedSingle').addEventListener('change', (e) => {
+        if (e.target.checked) {
+            chrome.storage.sync.set({groupUngroupedTabs: true});
+        }
+    });
+    document.getElementById('ungroupedIndividual').addEventListener('change', (e) => {
+        if (e.target.checked) {
+            chrome.storage.sync.set({groupUngroupedTabs: false});
+        }
     });
 
     // Set up export button
